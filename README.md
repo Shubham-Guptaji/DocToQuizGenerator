@@ -62,8 +62,7 @@ ai-quiz-platform/
 │   ├── create_quiz.py          # PDF upload, document metadata inspection, and quiz configuration
 │   ├── take_quiz.py            # Interactive quiz taking, question palette, and submission
 │   ├── results.py              # Detailed results review, Plotly analytics, and retry flow
-│   ├── history.py              # Historical attempt browser, filters, and deletion controls
-│   └── settings_page.py        # Gemini API key setup, model selector, and system health
+│   └── history.py              # Historical attempt browser, filters, and deletion controls
 │
 ├── utils/                      # Utilities and security safeguards
 │   ├── __init__.py

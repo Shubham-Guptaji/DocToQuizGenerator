@@ -140,6 +140,26 @@ class QuizRepository:
                 "questions": questions_data,
             }
 
+    def get_available_quizzes(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Fetch list of generated quizzes available to attempt."""
+        with self.get_session() as db:
+            quizzes = (
+                db.query(QuizModel)
+                .order_by(desc(QuizModel.created_at))
+                .limit(limit)
+                .all()
+            )
+            return [
+                {
+                    "quiz_id": q.id,
+                    "document_name": q.document.filename if q.document else "Unknown Document",
+                    "difficulty": q.difficulty,
+                    "question_count": q.question_count,
+                    "created_at": q.created_at,
+                }
+                for q in quizzes
+            ]
+
     def save_quiz_attempt(
         self,
         quiz_id: str,

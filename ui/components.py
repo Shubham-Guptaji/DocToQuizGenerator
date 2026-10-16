@@ -218,6 +218,67 @@ def render_custom_css():
             color: #fca5a5;
             font-weight: 600;
         }
+
+        /* MCQ Question Palette Container & State Buttons */
+        .st-key-mcq_palette_container {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 10px 8px;
+        }
+
+        .st-key-mcq_palette_container div[data-testid="stButton"] button {
+            border-radius: 8px !important;
+            padding: 6px 2px !important;
+            font-size: 0.92rem !important;
+            font-weight: 700 !important;
+            min-height: 40px !important;
+            letter-spacing: 0.02em !important;
+            transition: all 0.15s ease-in-out !important;
+        }
+
+        /* Attended Button (Green) */
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(33, 195, 84)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(34, 197, 94)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="green"]) {
+            border: 1.5px solid rgba(34, 197, 94, 0.6) !important;
+            background-color: rgba(34, 197, 94, 0.10) !important;
+        }
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(33, 195, 84)"]):hover,
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="green"]):hover {
+            background-color: rgba(34, 197, 94, 0.22) !important;
+            border-color: #22c55e !important;
+            transform: translateY(-1px);
+        }
+
+        /* Not Attended Button (Red) */
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(255, 43, 43)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(239, 68, 68)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="red"]) {
+            border: 1.5px solid rgba(239, 68, 68, 0.5) !important;
+            background-color: rgba(239, 68, 68, 0.08) !important;
+        }
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(255, 43, 43)"]):hover,
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="red"]):hover {
+            background-color: rgba(239, 68, 68, 0.18) !important;
+            border-color: #ef4444 !important;
+            transform: translateY(-1px);
+        }
+
+        /* In Review Button (Blue) */
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(28, 131, 225)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(59, 130, 246)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(0, 104, 201)"]),
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="blue"]) {
+            border: 1.5px solid rgba(59, 130, 246, 0.65) !important;
+            background-color: rgba(59, 130, 246, 0.14) !important;
+        }
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="rgb(28, 131, 225)"]):hover,
+        .st-key-mcq_palette_container div[data-testid="stButton"] button:has(span[style*="blue"]):hover {
+            background-color: rgba(59, 130, 246, 0.26) !important;
+            border-color: #3b82f6 !important;
+            transform: translateY(-1px);
+        }
         </style>
         """,
         unsafe_allow_html=True,

@@ -15,8 +15,36 @@ def render_take_quiz_page(
     """Render the active quiz-taking view."""
     active_quiz = st.session_state.get("active_quiz")
     if not active_quiz:
-        st.info("ℹ️ No active quiz session found. Please generate or select a quiz first.")
-        if st.button("🚀 Go to Create Quiz", type="primary"):
+        st.info("ℹ️ No active quiz session in progress.")
+        available = quiz_repo.get_available_quizzes(limit=5)
+        if available:
+            st.markdown("### 📚 Select a Quiz to Practice:")
+            for qz in available:
+                with st.container():
+                    c_info, c_btn = st.columns([3, 1])
+                    with c_info:
+                        st.markdown(f"**📄 {qz['document_name']}**")
+                        st.caption(f"{qz['question_count']} Questions • Difficulty: {qz['difficulty']}")
+                    with c_btn:
+                        if st.button("▶️ Start Quiz", key=f"start_avail_{qz['quiz_id']}", type="primary", use_container_width=True):
+                            loaded = quiz_repo.get_quiz_with_questions(qz["quiz_id"])
+                            if loaded:
+                                st.session_state["active_quiz"] = {
+                                    "quiz_id": loaded["id"],
+                                    "document_name": loaded["document_name"],
+                                    "difficulty": loaded["difficulty"],
+                                    "question_count": len(loaded["questions"]),
+                                    "questions": [q.model_dump() for q in loaded["questions"]],
+                                    "time_limit_minutes": None,
+                                }
+                                st.session_state["quiz_answers"] = {}
+                                st.session_state["quiz_marked"] = set()
+                                st.session_state["current_question_idx"] = 0
+                                st.session_state["quiz_start_timestamp"] = None
+                                st.rerun()
+
+        st.write("")
+        if st.button("🚀 Create New Quiz from PDF", type="secondary" if available else "primary"):
             st.session_state["active_nav"] = "Create Quiz"
             st.rerun()
         return
@@ -157,38 +185,79 @@ def render_take_quiz_page(
                 st.caption("Last Question")
 
     with col_palette:
+        # Question state counts
+        rev_count = len([q for q in questions_raw if q["question_id"] in marked_set])
+        att_count = len([q for q in questions_raw if q["question_id"] in answers_dict and answers_dict[q["question_id"]] and q["question_id"] not in marked_set])
+        unatt_count = total_q - (att_count + rev_count)
+
         st.markdown("### Question Palette")
         st.caption("Click any number to jump directly:")
 
-        # Palette Grid: 5 columns
-        cols = st.columns(5)
-        for i in range(total_q):
-            q_item = questions_raw[i]
-            qid = q_item["question_id"]
-            is_ans = qid in answers_dict and answers_dict[qid]
-            is_m = qid in marked_set
-            is_curr = i == current_idx
+        with st.container(key="mcq_palette_container"):
+            # Palette Grid: 5 columns
+            cols = st.columns(5)
+            for i in range(total_q):
+                q_item = questions_raw[i]
+                qid = q_item["question_id"]
+                is_ans = bool(qid in answers_dict and answers_dict[qid])
+                is_m = bool(qid in marked_set)
+                is_curr = (i == current_idx)
 
-            # Palette button label
-            label = f"{i+1}"
-            if is_m:
-                label += "🚩"
-            elif is_ans:
-                label += "✓"
+                num_str = f"[{i+1}]" if is_curr else f"{i+1}"
 
-            col_target = cols[i % 5]
-            btn_type = "primary" if is_curr else ("secondary")
-            if col_target.button(label, key=f"pal_btn_{i}", type=btn_type, use_container_width=True):
-                st.session_state["current_question_idx"] = i
-                st.rerun()
+                # Question Palette Color Coding:
+                # 🔵 Blue: In Review
+                # 🟢 Green: Attended
+                # 🔴 Red: Not Attended
+                if is_m:
+                    icon = "🚩✓" if is_ans else "🚩"
+                    label = f":blue[**{num_str}** {icon}]"
+                    help_text = f"Question {i+1}: In Review{' (Answered)' if is_ans else ' (Unanswered)'}{' • Active' if is_curr else ''}"
+                elif is_ans:
+                    label = f":green[**{num_str}** ✓]"
+                    help_text = f"Question {i+1}: Attended • Answer: {answers_dict[qid]}{' • Active' if is_curr else ''}"
+                else:
+                    label = f":red[**{num_str}**]"
+                    help_text = f"Question {i+1}: Not Attended{' • Active' if is_curr else ''}"
 
+                col_target = cols[i % 5]
+                if col_target.button(label, key=f"pal_btn_{i}", type="secondary", use_container_width=True, help=help_text):
+                    st.session_state["current_question_idx"] = i
+                    st.rerun()
+
+        # Clean, explicit Legend Card
         st.markdown(
-            """
-            <div style="font-size:0.75rem; color:#94a3b8; margin-top:10px;">
-                <b>Legend:</b><br>
-                • <b>✓</b> Answered<br>
-                • <b>🚩</b> Marked for review<br>
-                • <b>Active</b> Highlighted in blue
+            f"""
+            <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px 14px; margin-top: 14px;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #f8fafc; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+                    Question Status
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 7px; font-size: 0.82rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 8px; color: #86efac; font-weight: 600;">
+                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #22c55e;"></span>
+                            Attended (Green)
+                        </span>
+                        <span style="color: #86efac; font-weight: 700;">{att_count}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 8px; color: #fca5a5; font-weight: 600;">
+                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #ef4444;"></span>
+                            Not Attended (Red)
+                        </span>
+                        <span style="color: #fca5a5; font-weight: 700;">{unatt_count}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 8px; color: #93c5fd; font-weight: 600;">
+                            <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #3b82f6;"></span>
+                            In Review (Blue)
+                        </span>
+                        <span style="color: #93c5fd; font-weight: 700;">{rev_count}</span>
+                    </div>
+                    <div style="border-top: 1px solid rgba(255,255,255,0.08); margin-top: 4px; padding-top: 6px; color: #94a3b8; font-size: 0.76rem;">
+                        Current Question indicated by <b>[ N ]</b>
+                    </div>
+                </div>
             </div>
             """,
             unsafe_allow_html=True,

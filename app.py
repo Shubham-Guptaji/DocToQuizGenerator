@@ -11,7 +11,6 @@ from ui.create_quiz import render_create_quiz_page
 from ui.dashboard import render_dashboard_page
 from ui.history import render_history_page
 from ui.results import render_results_page
-from ui.settings_page import render_settings_page
 from ui.take_quiz import render_take_quiz_page
 
 # Set page configuration
@@ -58,7 +57,6 @@ with st.sidebar:
         "Take Quiz",
         "Results & Review",
         "Quiz History",
-        "Settings",
     ]
 
     selected_nav = st.radio(
@@ -112,5 +110,3 @@ elif current_page == "Results & Review":
     )
 elif current_page == "Quiz History":
     render_history_page(quiz_repo=quiz_repo)
-elif current_page == "Settings":
-    render_settings_page(quiz_repo=quiz_repo)
