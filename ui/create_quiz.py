@@ -17,7 +17,7 @@ def render_create_quiz_page(
     render_hero_banner(
         title="Create a New Quiz",
         subtitle="Upload your study materials, configure difficulty tiers, and generate custom multiple-choice assessments.",
-        badge="DOCUMENT-GROUNDED GENERATION",
+        badge="ASSESSMENT SETUP",
     )
 
     st.subheader("1. Upload Educational Document")
@@ -172,7 +172,7 @@ def render_create_quiz_page(
 
             with st.status("Generating high-quality multiple choice questions...", expanded=True) as status:
                 st.write("Chunking and distributing source context across document sections...")
-                st.write(f"Querying AI model for {question_count_choice} {difficulty_choice} MCQs...")
+                st.write(f"Synthesizing {question_count_choice} {difficulty_choice} assessment questions...")
 
                 questions, warning_msg = question_service.generate_quiz_questions(
                     extracted_doc=extracted_doc,

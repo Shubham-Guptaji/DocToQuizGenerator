@@ -44,24 +44,8 @@ if "active_nav" not in st.session_state:
 
 # Sidebar Branding and Navigation
 with st.sidebar:
-    st.markdown("## 🎓 **SmartQuiz AI**")
-    st.caption("AI-Powered PDF MCQ Generator & Exam Platform")
-
-    # API Status Indicator
-    if settings.has_gemini_api_key:
-        st.markdown(
-            f"<div style='background:rgba(34,197,94,0.15); border:1px solid rgba(34,197,94,0.3); "
-            f"border-radius:8px; padding:6px 12px; font-size:0.8rem; color:#4ade80; margin-bottom:15px;'>"
-            f"🟢 <b>Gemini Active</b> ({settings.GEMINI_MODEL})</div>",
-            unsafe_allow_html=True,
-        )
-    else:
-        st.markdown(
-            "<div style='background:rgba(234,179,8,0.15); border:1px solid rgba(234,179,8,0.3); "
-            "border-radius:8px; padding:6px 12px; font-size:0.8rem; color:#facc15; margin-bottom:15px;'>"
-            "🟡 <b>Mock Provider Mode</b> (Offline)</div>",
-            unsafe_allow_html=True,
-        )
+    st.markdown("## 🎓 **SmartQuiz**")
+    st.caption("Smart PDF Assessment & Exam Platform")
 
     # Active quiz alert in sidebar
     if st.session_state.get("active_quiz"):
@@ -102,7 +86,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-    st.caption("Version 1.0.0 • Antigravity AI Engine")
+    st.caption("Version 1.0.0")
 
 # Render Selected View
 current_page = st.session_state["active_nav"]

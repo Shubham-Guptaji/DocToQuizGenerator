@@ -214,7 +214,7 @@ def render_take_quiz_page(
             return
         st.session_state["is_submitting"] = True
 
-        with st.spinner("Scoring assessment and generating personalized AI learning feedback..."):
+        with st.spinner("Scoring assessment and preparing personalized learning feedback..."):
             # Construct submission
             submission = QuizSubmission(
                 quiz_id=active_quiz["quiz_id"],

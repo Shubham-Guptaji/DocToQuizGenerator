@@ -11,17 +11,9 @@ def render_dashboard_page(quiz_repo: QuizRepository):
     """Render the main home dashboard overview."""
     render_hero_banner(
         title="Smart Quiz & Assessment Platform",
-        subtitle="Transform any educational PDF into challenging exam-style MCQs with automated scoring and personalized AI revision roadmaps.",
+        subtitle="Transform any educational PDF into challenging exam-style MCQs with automated scoring and personalized revision roadmaps.",
         badge="STUDENT & ASPIRANT DASHBOARD",
     )
-
-    # API Key status warning if missing
-    if not settings.has_gemini_api_key:
-        st.warning(
-            "⚠️ **Gemini API Key Not Configured**: Running in **Local Mock Provider Mode**. "
-            "Questions and feedback will be generated using realistic local mock data. "
-            "To connect live Google Gemini 3.8 Flash, enter your API key in **⚙️ Settings** or in `.env`."
-        )
 
     # Fetch stats
     stats = quiz_repo.get_dashboard_stats()

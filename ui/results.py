@@ -201,8 +201,8 @@ def render_results_page(quiz_repo: QuizRepository, feedback_service: FeedbackSer
                 st.session_state["active_nav"] = "Take Quiz"
                 st.rerun()
 
-    # AI Learning Feedback Section
-    st.subheader("🤖 AI-Powered Feedback & Improvement Plan")
+    # Learning Feedback Section
+    st.subheader("💡 Personalized Performance Feedback & Study Plan")
     with st.container():
         f1, f2 = st.columns([1, 1])
         with f1:

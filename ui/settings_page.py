@@ -10,20 +10,20 @@ from ui.components import render_hero_banner
 def render_settings_page(quiz_repo: QuizRepository):
     """Render application configuration and AI provider management."""
     render_hero_banner(
-        title="Settings & AI Provider Configuration",
-        subtitle="Manage your Google Gemini credentials, model parameters, and local data persistence.",
+        title="Settings & System Configuration",
+        subtitle="Manage your API credentials, model parameters, and local data persistence.",
         badge="CONFIGURATION",
     )
 
-    st.subheader("1. Google Gemini API Status")
+    st.subheader("1. API Status & Model Configuration")
 
     is_configured = settings.has_gemini_api_key
     if is_configured:
-        st.success("✅ **Gemini API Key is Active and Configured**")
+        st.success("✅ **API Key is Active and Configured**")
     else:
-        st.warning(
-            "⚠️ **No Active API Key Detected**: Currently operating in Local Mock Provider Mode. "
-            "Questions will be generated using offline sample templates."
+        st.info(
+            "ℹ️ **No API Key Detected**: Currently operating in offline evaluation mode. "
+            "Enter your Google Gemini API key below to enable live question generation."
         )
 
     # API Key Input

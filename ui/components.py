@@ -238,7 +238,7 @@ def render_metric_card(label: str, value: str, subtext: str = "", icon: str = ""
     )
 
 
-def render_hero_banner(title: str, subtitle: str, badge: str = "AI-POWERED ASSESSMENT"):
+def render_hero_banner(title: str, subtitle: str, badge: str = "SMART ASSESSMENT"):
     """Render a hero gradient banner."""
     st.markdown(
         f"""
