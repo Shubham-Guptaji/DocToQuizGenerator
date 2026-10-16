@@ -86,11 +86,12 @@ class QuizRepository:
             db.flush()  # Generate quiz.id
 
             for q in questions:
+                opts_data = q.options.model_dump() if hasattr(q.options, "model_dump") else q.options
                 q_model = QuestionModel(
                     quiz_id=quiz.id,
                     question_id_label=q.question_id,
                     question_text=q.question,
-                    options_json=json.dumps(q.options),
+                    options_json=json.dumps(opts_data),
                     correct_answer=q.correct_answer,
                     explanation=q.explanation,
                     topic=q.topic,

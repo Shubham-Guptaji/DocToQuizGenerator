@@ -2,6 +2,7 @@
 from models.schemas import (
     DifficultyLevel,
     OptionKey,
+    OptionsModel,
     QuestionItem,
     QuizQuestionsResponse,
     QuizConfig,
@@ -25,6 +26,7 @@ from models.database import (
 __all__ = [
     "DifficultyLevel",
     "OptionKey",
+    "OptionsModel",
     "QuestionItem",
     "QuizQuestionsResponse",
     "QuizConfig",

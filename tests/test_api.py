@@ -2,9 +2,14 @@
 from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
-from api import app
+import api
+from services.ai_provider import MockAIProvider
 
-client = TestClient(app)
+# Ensure test suite uses mock provider for deterministic offline testing
+api.question_service.ai_provider = MockAIProvider()
+api.feedback_service.ai_provider = MockAIProvider()
+
+client = TestClient(api.app)
 
 
 def test_health_endpoint():

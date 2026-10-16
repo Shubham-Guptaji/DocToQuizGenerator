@@ -58,7 +58,7 @@ class GeminiAIProvider(BaseAIProvider):
     """Google Gemini AI integration using the official google-genai SDK."""
 
     def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
-        self.api_key = api_key or settings.GEMINI_API_KEY
+        self.api_key = api_key if api_key is not None else settings.GEMINI_API_KEY
         self.model = model or settings.GEMINI_MODEL
         self._client: Optional[genai.Client] = None
 
@@ -108,17 +108,37 @@ class GeminiAIProvider(BaseAIProvider):
             try:
                 logger.info(f"Generating structured content with model {self.model} (attempt {attempt}/{max_retries})")
 
-                config = types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=schema_cls,
-                    system_instruction=system_instruction,
-                )
-
-                response = self._client.models.generate_content(
-                    model=self.model,
-                    contents=prompt,
-                    config=config,
-                )
+                try:
+                    config = types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=schema_cls,
+                        system_instruction=system_instruction,
+                    )
+                    response = self._client.models.generate_content(
+                        model=self.model,
+                        contents=prompt,
+                        config=config,
+                    )
+                except Exception as schema_err:
+                    err_str = str(schema_err)
+                    if "additionalProperties" in err_str or "schema" in err_str.lower() or "400" in err_str:
+                        logger.warning(f"Gemini response_schema call encountered: {schema_err}. Executing prompt-schema fallback...")
+                        schema_json = json.dumps(schema_cls.model_json_schema(), indent=2)
+                        fallback_instruction = (
+                            (system_instruction or "")
+                            + f"\n\nCRITICAL: Respond ONLY with valid JSON strictly conforming to this schema:\n{schema_json}"
+                        )
+                        fallback_config = types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            system_instruction=fallback_instruction,
+                        )
+                        response = self._client.models.generate_content(
+                            model=self.model,
+                            contents=prompt,
+                            config=fallback_config,
+                        )
+                    else:
+                        raise schema_err
 
                 output_text = response.text or ""
                 cleaned_json = self._clean_json_output(output_text)
@@ -126,7 +146,29 @@ class GeminiAIProvider(BaseAIProvider):
                 return validated_obj
 
             except APIError as api_err:
+                err_str = str(api_err)
                 logger.warning(f"Gemini API error (attempt {attempt}): {api_err}")
+
+                # If 503 high demand on primary model, attempt immediate failover to high-throughput flash-lite
+                if ("503" in err_str or "UNAVAILABLE" in err_str or "high demand" in err_str.lower()) and self.model != "gemini-3.5-flash-lite":
+                    logger.info("Model 503 high demand detected. Attempting failover to gemini-3.5-flash-lite...")
+                    try:
+                        config = types.GenerateContentConfig(
+                            response_mime_type="application/json",
+                            response_schema=schema_cls,
+                            system_instruction=system_instruction,
+                        )
+                        response = self._client.models.generate_content(
+                            model="gemini-3.5-flash-lite",
+                            contents=prompt,
+                            config=config,
+                        )
+                        output_text = response.text or ""
+                        cleaned_json = self._clean_json_output(output_text)
+                        return schema_cls.model_validate_json(cleaned_json)
+                    except Exception as failover_err:
+                        logger.warning(f"Failover attempt to gemini-3.5-flash-lite failed: {failover_err}")
+
                 if attempt == max_retries:
                     raise AIProviderError(f"Gemini API error after {max_retries} attempts: {api_err}")
                 time.sleep(delay)

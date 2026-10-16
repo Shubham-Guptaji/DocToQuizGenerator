@@ -1,6 +1,6 @@
 """Pydantic data schemas for validation, serialization, and structured AI outputs."""
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 from pydantic import BaseModel, Field, field_validator, model_validator
 
 
@@ -20,11 +20,39 @@ class OptionKey(str, Enum):
     D = "D"
 
 
+class OptionsModel(BaseModel):
+    """Explicit four options model ensuring Gemini Developer API compatibility without additionalProperties."""
+    A: str = Field(description="Option A text")
+    B: str = Field(description="Option B text")
+    C: str = Field(description="Option C text")
+    D: str = Field(description="Option D text")
+
+    def __len__(self) -> int:
+        return 4
+
+    def __getitem__(self, key: str) -> str:
+        if hasattr(self, key):
+            return getattr(self, key)
+        raise KeyError(key)
+
+    def get(self, key: str, default=None):
+        return getattr(self, key, default)
+
+    def items(self):
+        return [("A", self.A), ("B", self.B), ("C", self.C), ("D", self.D)]
+
+    def keys(self):
+        return ["A", "B", "C", "D"]
+
+    def values(self):
+        return [self.A, self.B, self.C, self.D]
+
+
 class QuestionItem(BaseModel):
     """Individual generated Multiple Choice Question schema."""
     question_id: str = Field(description="Unique question identifier, e.g. Q1, Q2, etc.")
     question: str = Field(description="Clear, unambiguous question text based on the source document.")
-    options: Dict[str, str] = Field(
+    options: OptionsModel = Field(
         description="Exactly four options keyed by 'A', 'B', 'C', and 'D'."
     )
     correct_answer: str = Field(
@@ -110,7 +138,7 @@ class QuestionReviewItem(BaseModel):
     """Item for detailed answer review post-submission."""
     question_id: str
     question: str
-    options: Dict[str, str]
+    options: Union[Dict[str, str], OptionsModel]
     selected_answer: Optional[str] = None
     correct_answer: str
     is_correct: bool
