@@ -1,0 +1,111 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 3 0 R >>
+endobj
+2 0 obj
+<< /Type /Outlines /Count 0 >>
+endobj
+3 0 obj
+<< /Type /Pages /Kids [4 0 R 5 0 R 6 0 R] /Count 3 >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 7 0 R >> >> >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 612 792] /Contents 9 0 R /Resources << /Font << /F1 7 0 R >> >> >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 612 792] /Contents 10 0 R /Resources << /Font << /F1 7 0 R >> >> >>
+endobj
+7 0 obj
+<< /Type /Font /Subtype /Type1 /Name /F1 /BaseFont /Helvetica >>
+endobj
+8 0 obj
+<< /Length 956 >>
+stream
+BT
+/F1 12 Tf
+50 740 Td
+16 TL
+(AI & MACHINE LEARNING PRIMER: FOUNDATIONS) Tj
+T* () Tj
+T* (Chapter 1: Supervised vs Unsupervised Learning) Tj
+T* () Tj
+T* (Machine learning systems fall into three primary algorithmic paradigms:) Tj
+T* (1. Supervised Learning: Models infer a function from labeled training data containing) Tj
+T* (   input vectors X and target labels Y. Key applications include binary classification) Tj
+T* (   \(e.g., medical diagnostics\) and continuous regression \(e.g., house price forecasting\).) Tj
+T* (2. Unsupervised Learning: Discovers latent patterns, cluster boundaries, or low-dimensional) Tj
+T* (   representations in unlabeled data. Notable algorithms include K-Means clustering,) Tj
+T* (   Principal Component Analysis \(PCA\), and autoencoders.) Tj
+T* (3. Reinforcement Learning: Agents optimize decision policies through environmental) Tj
+T* (   rewards and penalties within a Markov Decision Process \(MDP\) setting.) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Length 939 >>
+stream
+BT
+/F1 12 Tf
+50 740 Td
+16 TL
+(ARTIFICIAL NEURAL NETWORKS & BACKPROPAGATION) Tj
+T* () Tj
+T* (Chapter 2: Deep Architectures, Activation Functions, and Optimization) Tj
+T* () Tj
+T* (Artificial neural networks consist of stacked layers of parameterized units:) Tj
+T* (- Rectified Linear Unit \(ReLU\): Defined as f\(x\) = max\(0, x\). Solves vanishing gradient) Tj
+T* (  problems across deep architectures and offers high computational efficiency.) Tj
+T* (- Sigmoid: Squashes input to the range \(0, 1\), standard for binary classification heads.) Tj
+T* (- Softmax: Normalizes real-valued logits into a categorical probability distribution) Tj
+T* (  summing to 1.0, essential for multi-class classification.) Tj
+T* () Tj
+T* (Backpropagation computes the exact analytical gradients of the loss function with) Tj
+T* (respect to network weights by recursively applying the chain rule from the final layer) Tj
+T* (backwards to input layers.) Tj
+ET
+endstream
+endobj
+10 0 obj
+<< /Length 1007 >>
+stream
+BT
+/F1 12 Tf
+50 740 Td
+16 TL
+(GENERALIZATION, OVERFITTING & REGULARIZATION) Tj
+T* () Tj
+T* (Chapter 3: Mitigating Variance and Improving Generalization) Tj
+T* () Tj
+T* (Overfitting occurs when a high-capacity model fits random noise in the training set,) Tj
+T* (producing poor validation accuracy. Established regularization strategies include:) Tj
+T* (1. L1 Regularization \(Lasso\): Adds the absolute sum of weights to loss, enforcing) Tj
+T* (   parameter sparsity and serving as implicit feature selection.) Tj
+T* (2. L2 Regularization \(Ridge / Weight Decay\): Penalizes squared weights, ensuring) Tj
+T* (   smooth parameter distributions without extreme weight magnitudes.) Tj
+T* (3. Dropout: Randomly zeros out hidden unit activations during forward training passes) Tj
+T* (   with probability p, breaking co-adaptation between feature detectors.) Tj
+T* (4. Early Stopping: Monitors validation error and terminates training when loss) Tj
+T* (   consistently increases, preventing over-training.) Tj
+ET
+endstream
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000104 00000 n 
+0000000173 00000 n 
+0000000299 00000 n 
+0000000425 00000 n 
+0000000552 00000 n 
+0000000632 00000 n 
+0000001639 00000 n 
+0000002629 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+3689
+%%EOF
